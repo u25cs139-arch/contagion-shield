@@ -8,10 +8,10 @@ export default function App() {
   const triggers = ['Isolated Hardship', 'Peer Contagion', 'Gateway Outage', 'Macro Shock'];
 
   return (
-    <div className="w-screen h-screen bg-[#060911] text-slate-100 flex flex-col overflow-hidden font-sans">
+    <div className="w-screen min-h-screen bg-[#060911] text-slate-100 flex flex-col overflow-y-auto font-sans">
       
       {/* Top Navigation Bar */}
-      <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0">
+      <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0 sticky top-0 z-50">
         <div className="flex items-center space-x-3">
           <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
           <h1 className="font-bold tracking-wider text-sm text-slate-200">CONTAGION SHIELD <span className="text-xs text-blue-400 font-mono ml-1">v3.0</span></h1>
@@ -24,10 +24,10 @@ export default function App() {
       </header>
 
       {/* Main Dashboard Layout */}
-      <div className="flex-1 grid grid-cols-12 gap-4 p-4 overflow-hidden">
+      <div className="flex-1 grid grid-cols-12 gap-4 p-4">
         
         {/* Left Column (Canvas & Metrics Grid) */}
-        <div className="col-span-9 flex flex-col gap-4 h-full overflow-hidden">
+        <div className="col-span-9 flex flex-col gap-4">
           
           {/* Elite Metrics Grid - Uniform typography and spacing */}
           <div className="grid grid-cols-4 gap-4 shrink-0">
@@ -73,7 +73,7 @@ export default function App() {
           </div>
 
           {/* 3D Topology Canvas Area */}
-          <div className="flex-1 bg-[#0b101d] border border-slate-800/80 rounded-xl relative overflow-hidden flex flex-col">
+          <div className="h-[520px] bg-[#0b101d] border border-slate-800/80 rounded-xl relative overflow-hidden flex flex-col">
             <div className="absolute top-3 left-4 z-10 pointer-events-none">
               <span className="text-[10px] font-mono tracking-wider text-blue-400/80 uppercase">3D Spatial Topology // Spider-Web Grid View</span>
             </div>
@@ -85,7 +85,7 @@ export default function App() {
         </div>
 
         {/* Right Column (Alert Feed & Expanded Node Inspector) */}
-        <div className="col-span-3 flex flex-col gap-4 h-full overflow-hidden">
+        <div className="col-span-3 flex flex-col gap-4">
           
           {/* Warning Feed Box */}
           <div className="h-36 shrink-0 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col">
@@ -98,8 +98,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Node Inspector Panel - Expanded Height to fill vertical space */}
-          <div className="flex-1 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col overflow-y-auto">
+          {/* Node Inspector Panel */}
+          <div className="min-h-[520px] bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">Node Inspector Telemetry</span>
               {selectedNode && <span className="text-[10px] text-emerald-400 font-mono">Active Selection</span>}
