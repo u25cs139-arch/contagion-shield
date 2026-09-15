@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ScenarioControls({ activeTrigger, setActiveTrigger }) {
+export default function ScenarioControls({ activeTrigger, onTriggerChange }) {
   const triggers = [
     { id: 'hardship', label: 'Isolated Hardship' },
     { id: 'contagion', label: 'Peer Contagion' },
@@ -19,7 +19,7 @@ export default function ScenarioControls({ activeTrigger, setActiveTrigger }) {
         return (
           <button
             key={trigger.id}
-            onClick={() => setActiveTrigger(trigger.id)}
+            onClick={() => onTriggerChange(trigger.id)}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 border ${
               isActive 
                 ? "bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/25 scale-105" 

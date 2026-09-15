@@ -5,11 +5,10 @@ export default function GraphView({ graphData, onNodeClick }) {
   const fgRef = useRef();
   const [loading, setLoading] = useState(true);
 
-  // Simulate a brief loading state for smooth transition
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 600);
+    }, 500);
     return () => clearTimeout(timer);
   }, [graphData]);
 
@@ -24,13 +23,33 @@ export default function GraphView({ graphData, onNodeClick }) {
         </div>
       ) : (
         <div className="relative w-full h-full">
-          {/* Main Force Graph Renderer */}
           <ForceGraph2D
             ref={fgRef}
             graphData={graphData}
-            nodeLabel={(node) => `${node.id} (${node.type || 'Borrower'})`}
-            nodeColor={(node) => node.color || '#6366f1'}
-            nodeVal={(node) => node.val || 6}
+            nodeCanvasObject={(node, ctx, globalScale) => {
+              const radius = node.val || 6;
+              
+              // Draw core node circle
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
+              ctx.fillStyle = node.color || '#6366f1';
+              ctx.fill();
+
+              // Shock-wave pulse ring for high risk / quarantined nodes
+              if (node.status === 'Quarantined' || node.riskScore > 70) {
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2 / globalScale;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, radius + 4, 0, 2 * Math.PI, false);
+                ctx.stroke();
+              }
+
+              // Node text label
+              ctx.font = `${10 / globalScale}px sans-serif`;
+              ctx.fillStyle = '#94a3b8';
+              ctx.textAlign = 'center';
+              ctx.fillText(node.id, node.x, node.y + radius + 10);
+            }}
             linkColor={() => '#334155'}
             linkWidth={1.5}
             onNodeClick={onNodeClick}
