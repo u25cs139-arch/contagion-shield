@@ -1,159 +1,153 @@
 import React, { useState } from 'react';
 import GraphView from './components/GraphView';
-import ScenarioControls from './components/ScenarioControls';
-import SidePanel from './components/SidePanel';
-import AlertFeed from './components/AlertFeed';
-import MonteCarloModal from './components/MonteCarloModal';
 
 export default function App() {
-  const [activeTrigger, setActiveTrigger] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTrigger, setActiveTrigger] = useState('Peer Contagion');
 
-  const [graphData, setGraphData] = useState({
-    nodes: [
-      { id: 'B-101', type: 'Borrower', color: '#6366f1', val: 8, riskScore: 20, status: 'Healthy' },
-      { id: 'B-102', type: 'Borrower', color: '#6366f1', val: 6, riskScore: 15, status: 'Healthy' },
-      { id: 'G-1', type: 'Guarantor', color: '#f59e0b', val: 10, riskScore: 45, status: 'Hardship' },
-      { id: 'PW-1', type: 'Gateway', color: '#10b981', val: 12, riskScore: 10, status: 'Healthy' }
-    ],
-    links: [
-      { source: 'B-101', target: 'G-1' },
-      { source: 'B-102', target: 'G-1' },
-      { source: 'G-1', target: 'PW-1' }
-    ]
-  });
-
-  const handleTriggerChange = (triggerId) => {
-    setActiveTrigger(triggerId);
-    if (triggerId === 'contagion') {
-      setAlerts(prev => [`[Contagion Event]: Cluster guarantor G-1 default triggered secondary ripple.`, ...prev]);
-      setGraphData(prev => ({
-        ...prev,
-        nodes: prev.nodes.map(n => n.id === 'G-1' ? { ...n, color: '#ef4444', riskScore: 88, status: 'Quarantined' } : n)
-      }));
-    } else if (triggerId === 'outage') {
-      setAlerts(prev => [`[Gateway Outage]: UPI Rail integration latency spiked for Gateway PW-1.`, ...prev]);
-      setGraphData(prev => ({
-        ...prev,
-        nodes: prev.nodes.map(n => n.id === 'PW-1' ? { ...n, color: '#f59e0b', riskScore: 75, status: 'Hardship' } : n)
-      }));
-    } else {
-      setAlerts(prev => [`[Stress Trigger]: ${triggerId} simulation sequence injected successfully.`, ...prev]);
-    }
-  };
-
-  const handleExportReport = () => {
-    alert("Executive Risk Briefing Report successfully compiled and exported as PDF.");
-  };
+  const triggers = ['Isolated Hardship', 'Peer Contagion', 'Gateway Outage', 'Macro Shock'];
 
   return (
-    <div className="relative flex flex-col h-screen w-screen bg-[#020617] text-slate-100 overflow-hidden font-sans select-none">
+    <div className="w-screen h-screen bg-[#060911] text-slate-100 flex flex-col overflow-hidden font-sans">
       
-      {/* Background Ambient Glow */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/[0.07] rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/[0.05] rounded-full blur-[120px] pointer-events-none"></div>
-
-      {/* Top Header Bar */}
-      <header className="relative z-10 h-16 border-b border-white/[0.06] bg-slate-950/80 backdrop-blur-xl px-6 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3.5">
-          <div className="relative flex items-center justify-center w-3 h-3">
-            <div className="absolute w-full h-full rounded-full bg-emerald-500 animate-ping opacity-75"></div>
-            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-          </div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-sm font-semibold tracking-tight text-slate-100 font-mono">
-              CONTAGION SHIELD <span className="text-slate-500 font-normal">v3.0</span>
-            </h1>
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400 border border-white/10 tracking-wide uppercase">
-              Microfinance Risk Platform
-            </span>
-          </div>
+      {/* Top Navigation Bar */}
+      <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+          <h1 className="font-bold tracking-wider text-sm text-slate-200">CONTAGION SHIELD <span className="text-xs text-blue-400 font-mono ml-1">v3.0</span></h1>
+          <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">MICROFINANCE RISK PLATFORM</span>
         </div>
-
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-indigo-400 text-xs font-semibold rounded-xl transition-all border border-indigo-500/30 shadow-lg"
-          >
-            <span>📊 Run Monte Carlo</span>
-          </button>
-          <button 
-            onClick={handleExportReport}
-            className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/20 border border-indigo-400/20 flex items-center gap-2"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Export Audit Report</span>
-          </button>
+        <div className="flex items-center space-x-3">
+          <button className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-xs font-semibold rounded text-white transition shadow-lg shadow-blue-900/40">Run Monte Carlo</button>
+          <button className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded text-slate-200 border border-slate-700 transition">Export Audit Report</button>
         </div>
       </header>
 
-      {/* Main Workspace */}
-      <div className="relative z-10 flex flex-1 overflow-hidden p-5 gap-5">
+      {/* Main Dashboard Layout */}
+      <div className="flex-1 grid grid-cols-12 gap-4 p-4 overflow-hidden">
         
-        {/* Left / Center Graph & Metrics Area */}
-        <div className="flex-1 flex flex-col gap-4 overflow-hidden">
+        {/* Left Column (Canvas & Metrics Grid) */}
+        <div className="col-span-9 flex flex-col gap-4 h-full overflow-hidden">
           
-          {/* Elite Uniform Metric Cards (Fixed Font Sizes & Padding) */}
+          {/* Elite Metrics Grid - Uniform typography and spacing */}
           <div className="grid grid-cols-4 gap-4 shrink-0">
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Total Borrowers</span>
-              <span className="text-2xl font-bold font-mono tracking-tight text-slate-100 mt-1">1,248</span>
+            <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase">Total Borrowers</span>
+              <span className="text-2xl font-bold text-slate-100 mt-1">1,248</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Active Clusters</span>
-              <span className="text-2xl font-bold font-mono tracking-tight text-indigo-400 mt-1">42</span>
+            <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase">Active Clusters</span>
+              <span className="text-2xl font-bold text-slate-100 mt-1">42</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">System Risk Score</span>
-              <span className="text-2xl font-bold font-mono tracking-tight text-emerald-400 mt-1">14.2%</span>
+            <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase">System Risk Score</span>
+              <span className="text-2xl font-bold text-amber-400 mt-1">14.2%</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Node Health Split</span>
-              <div className="flex items-center gap-1.5 text-sm font-mono font-bold mt-1">
-                <span className="text-emerald-400" title="Healthy">88%</span>
-                <span className="text-slate-600">/</span>
-                <span className="text-amber-400" title="Hardship">9%</span>
-                <span className="text-slate-600">/</span>
-                <span className="text-rose-500" title="Default">3%</span>
-              </div>
+            <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase">Node Health Split</span>
+              <span className="text-xs font-semibold text-emerald-400 mt-2">88% / 9% / 3%</span>
             </div>
           </div>
 
-          {/* Scenario Triggers Toolbar */}
-          <div className="shrink-0">
-            <ScenarioControls activeTrigger={activeTrigger} onTriggerChange={handleTriggerChange} />
+          {/* Stress Triggers with Active Neon States */}
+          <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl px-4 py-3 flex items-center space-x-4 shrink-0">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Stress Triggers:</span>
+            <div className="flex items-center space-x-2">
+              {triggers.map((trigger) => {
+                const isActive = activeTrigger === trigger;
+                return (
+                  <button
+                    key={trigger}
+                    onClick={() => setActiveTrigger(trigger)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                      isActive
+                        ? 'bg-blue-600/20 border border-blue-500 text-blue-300 shadow-[0_0_12px_rgba(59,130,246,0.3)]'
+                        : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                    }`}
+                  >
+                    {trigger}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Graph Canvas Container */}
-          <div className="flex-1 bg-slate-900/20 border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl relative backdrop-blur-xl">
-            <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-slate-950/80 backdrop-blur-md border border-white/10 rounded-full text-[10px] uppercase font-mono tracking-wider text-slate-400 pointer-events-none">
-              3D Spatial Topology // Spider-Web Grid View
+          {/* 3D Topology Canvas Area */}
+          <div className="flex-1 bg-[#0b101d] border border-slate-800/80 rounded-xl relative overflow-hidden flex flex-col">
+            <div className="absolute top-3 left-4 z-10 pointer-events-none">
+              <span className="text-[10px] font-mono tracking-wider text-blue-400/80 uppercase">3D Spatial Topology // Spider-Web Grid View</span>
             </div>
-            <GraphView graphData={graphData} onNodeClick={(node) => setSelectedNode(node)} />
+            <div className="flex-1 w-full h-full">
+              <GraphView onNodeSelect={setSelectedNode} />
+            </div>
           </div>
+
         </div>
 
-        {/* Right Sidebar */}
-        <div className="w-88 flex flex-col gap-4 shrink-0 overflow-y-auto">
-          <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl">
-            <AlertFeed alerts={alerts} />
+        {/* Right Column (Alert Feed & Expanded Node Inspector) */}
+        <div className="col-span-3 flex flex-col gap-4 h-full overflow-hidden">
+          
+          {/* Warning Feed Box */}
+          <div className="h-36 shrink-0 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">Early Warning Feed</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+            <div className="flex-1 flex items-center justify-center text-center">
+              <p className="text-xs text-slate-500 italic">No cascading contagion risks detected in current epoch.</p>
+            </div>
           </div>
-          <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl min-h-[380px]">
-            <SidePanel selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
+
+          {/* Node Inspector Panel - Expanded Height to fill vertical space */}
+          <div className="flex-1 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col overflow-y-auto">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">Node Inspector Telemetry</span>
+              {selectedNode && <span className="text-[10px] text-emerald-400 font-mono">Active Selection</span>}
+            </div>
+
+            {selectedNode ? (
+              <div className="space-y-3 mt-2 text-xs">
+                <div className="p-2.5 bg-slate-900/80 rounded border border-slate-800">
+                  <span className="text-slate-500 block text-[10px] uppercase">Node Identifier</span>
+                  <span className="font-mono font-bold text-slate-200 text-sm">{selectedNode.id}</span>
+                </div>
+                <div className="p-2.5 bg-slate-900/80 rounded border border-slate-800">
+                  <span className="text-slate-500 block text-[10px] uppercase">Cluster Group</span>
+                  <span className="font-medium text-slate-300">{selectedNode.group}</span>
+                </div>
+                <div className="p-2.5 bg-slate-900/80 rounded border border-slate-800">
+                  <span className="text-slate-500 block text-[10px] uppercase">Calculated Risk Score</span>
+                  <span className="font-mono font-bold text-amber-400 text-sm">{selectedNode.risk}%</span>
+                </div>
+                <div className="p-2.5 bg-slate-900/80 rounded border border-slate-800">
+                  <span className="text-slate-500 block text-[10px] uppercase mb-1">Upstream Contagion Path</span>
+                  <ul className="space-y-1 text-slate-400 font-mono text-[11px]">
+                    <li>1. B-101 (Direct)</li>
+                    <li>2. Guarantor: G-1</li>
+                    <li>3. Gateway: NW-1</li>
+                  </ul>
+                </div>
+                <div className="p-2.5 bg-slate-900/80 rounded border border-slate-800">
+                  <span className="text-slate-500 block text-[10px] uppercase">Zero-Knowledge Proof Status</span>
+                  <span className="text-emerald-400 font-mono font-medium">VERIFIED (zk-SNARK)</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border border-dashed border-slate-800/80 rounded-xl my-2">
+                <p className="text-xs text-slate-400 mb-3">Select any node on the graph canvas to inspect risk telemetry.</p>
+                <button
+                  onClick={() => setSelectedNode({ id: 'G-1', group: 'Guarantor', risk: 45 })}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded text-slate-200 border border-slate-700 transition font-medium"
+                >
+                  Load Sample Node
+                </button>
+              </div>
+            )}
           </div>
+
         </div>
 
       </div>
-
-      <MonteCarloModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onRunSimulation={(intensity) => {
-          setAlerts(prev => [`[Monte Carlo Engine]: Ran simulation at ${intensity}% shock intensity across 1,000 paths.`, ...prev]);
-        }}
-      />
     </div>
   );
 }
