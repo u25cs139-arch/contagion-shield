@@ -9,7 +9,6 @@ export default function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [alerts, setAlerts] = useState([]);
 
-  // Base graph data
   const [graphData, setGraphData] = useState({
     nodes: [
       { id: 'B-101', type: 'Borrower', color: '#6366f1', val: 8, riskScore: 20, status: 'Healthy' },
@@ -57,33 +56,33 @@ export default function App() {
   return (
     <div className="relative flex flex-col h-screen w-screen bg-[#020617] text-slate-100 overflow-hidden font-sans select-none">
       
-      {/* Ambient Background Glow Effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Ambient Enterprise Background Glow */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/[0.07] rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/[0.05] rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Top Header Bar */}
-      <header className="relative z-10 h-16 border-b border-white/5 bg-slate-950/60 backdrop-blur-xl px-6 flex items-center justify-between shrink-0 shadow-sm">
+      <header className="relative z-10 h-16 border-b border-white/[0.06] bg-slate-950/80 backdrop-blur-xl px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3.5">
-          <div className="relative flex items-center justify-center w-3.5 h-3.5">
-            <div className="absolute w-full h-full rounded-full bg-indigo-500 animate-ping opacity-75"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/50"></div>
+          <div className="relative flex items-center justify-center w-3 h-3">
+            <div className="absolute w-full h-full rounded-full bg-emerald-500 animate-ping opacity-75"></div>
+            <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
           </div>
-          <div className="flex items-baseline gap-2.5">
-            <h1 className="text-base font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-              Contagion Shield
+          <div className="flex items-center gap-3">
+            <h1 className="text-sm font-semibold tracking-tight text-slate-100 font-mono">
+              CONTAGION SHIELD <span className="text-slate-500 font-normal">v2.4</span>
             </h1>
-            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 tracking-wide uppercase">
-              Enterprise Risk Engine
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400 border border-white/10 tracking-wide uppercase">
+              Microfinance Risk Platform
             </span>
           </div>
         </div>
 
-        {/* Export Report Action */}
+        {/* Clean Vector Export Button */}
         <button 
           onClick={handleExportReport}
-          className="group relative px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/25 border border-indigo-400/20 flex items-center gap-2 active:scale-95"
+          className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all duration-150 shadow-lg shadow-indigo-600/20 border border-indigo-400/20 flex items-center gap-2 active:scale-95"
         >
-          <span className="text-sm">📄</span>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           <span>Export Audit Report</span>
         </button>
       </header>
@@ -94,28 +93,28 @@ export default function App() {
         {/* Left / Center Graph & Metrics Area */}
         <div className="flex-1 flex flex-col gap-4 overflow-hidden">
           
-          {/* Elite Metrics & Health Bar */}
+          {/* Elite Metrics Grid */}
           <div className="grid grid-cols-4 gap-4 shrink-0">
-            <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-3.5 rounded-2xl flex flex-col justify-between shadow-xl shadow-black/40">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Borrowers</span>
-              <span className="text-lg font-bold tracking-tight text-slate-100 mt-1">1,248</span>
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Total Borrowers</span>
+              <span className="text-lg font-bold font-mono tracking-tight text-slate-100 mt-1">1,248</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-3.5 rounded-2xl flex flex-col justify-between shadow-xl shadow-black/40">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Active Clusters</span>
-              <span className="text-lg font-bold tracking-tight text-indigo-400 mt-1">42</span>
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Active Clusters</span>
+              <span className="text-lg font-bold font-mono tracking-tight text-indigo-400 mt-1">42</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-3.5 rounded-2xl flex flex-col justify-between shadow-xl shadow-black/40">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">System Risk Score</span>
-              <span className="text-lg font-bold tracking-tight text-emerald-400 mt-1">14.2% <span className="text-xs font-normal text-slate-400">(Low)</span></span>
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">System Risk Score</span>
+              <span className="text-lg font-bold font-mono tracking-tight text-emerald-400 mt-1">14.2%</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-3.5 rounded-2xl flex flex-col justify-between shadow-xl shadow-black/40">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Node Health Split</span>
-              <div className="flex items-center gap-1.5 text-xs font-bold mt-1">
-                <span className="text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20" title="Healthy">88%</span>
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Node Health Split</span>
+              <div className="flex items-center gap-1 text-xs font-mono font-bold mt-1">
+                <span className="text-emerald-400" title="Healthy">88%</span>
                 <span className="text-slate-600">/</span>
-                <span className="text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20" title="Hardship">9%</span>
+                <span className="text-amber-400" title="Hardship">9%</span>
                 <span className="text-slate-600">/</span>
-                <span className="text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20" title="Default">3%</span>
+                <span className="text-rose-500" title="Default">3%</span>
               </div>
             </div>
           </div>
@@ -125,21 +124,21 @@ export default function App() {
             <ScenarioControls activeTrigger={activeTrigger} onTriggerChange={handleTriggerChange} />
           </div>
 
-          {/* Graph Canvas Container with Premium Framing */}
-          <div className="flex-1 bg-slate-900/30 border border-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-black/60 relative backdrop-blur-xl">
-            <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-slate-950/70 backdrop-blur-md border border-white/10 rounded-full text-[10px] uppercase font-semibold tracking-wider text-slate-400 pointer-events-none">
-              Live Network Topology Map
+          {/* Graph Canvas Container */}
+          <div className="flex-1 bg-slate-900/20 border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl relative backdrop-blur-xl">
+            <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-slate-950/80 backdrop-blur-md border border-white/10 rounded-full text-[10px] uppercase font-mono tracking-wider text-slate-400 pointer-events-none">
+              Topology Canvas // Real-Time Graph
             </div>
             <GraphView graphData={graphData} onNodeClick={(node) => setSelectedNode(node)} />
           </div>
         </div>
 
-        {/* Right Sidebar & Feed */}
+        {/* Right Sidebar */}
         <div className="w-88 flex flex-col gap-4 shrink-0 overflow-y-auto">
-          <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl">
             <AlertFeed alerts={alerts} />
           </div>
-          <div className="flex-1 bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
+          <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl">
             <SidePanel selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
           </div>
         </div>
