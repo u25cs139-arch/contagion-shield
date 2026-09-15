@@ -6,69 +6,46 @@ export default function GraphView({ graphData, onNodeClick }) {
   const fgRef = useRef();
   const [loading, setLoading] = useState(true);
 
-  // Function to generate a procedural 3D spider web / radar grid
-  const createSpiderWebObject = () => {
-    const group = new THREE.Group();
-    const radiusSteps = [40, 80, 120, 160];
-    const radialLines = 8;
-
-    // Material for web rings & spokes
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x6366f1,
-      transparent: true,
-      opacity: 0.15,
-      linewidth: 1
-    });
-
-    // 1. Create Concentric Rings (Web Polygons)
-    radiusSteps.forEach((r) => {
-      const points = [];
-      for (let i = 0; i <= 32; i++) {
-        const theta = (i / 32) * Math.PI * 2;
-        points.push(new THREE.Vector3(Math.cos(theta) * r, Math.sin(theta) * r, -20));
-      }
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const ring = new THREE.Line(geometry, lineMaterial);
-      group.add(ring);
-    });
-
-    // 2. Create Radial Spokes (Web Struts)
-    for (let i = 0; i < radialLines; i++) {
-      const theta = (i / radialLines) * Math.PI * 2;
-      const points = [
-        new THREE.Vector3(0, 0, -20),
-        new THREE.Vector3(Math.cos(theta) * 160, Math.sin(theta) * 160, -20)
-      ];
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const spoke = new THREE.Line(geometry, lineMaterial);
-      group.add(spoke);
-    }
-
-    return group;
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 600);
+    }, 400);
     return () => clearTimeout(timer);
   }, [graphData]);
 
-  const handleEngineStop = () => {
-    if (fgRef.current && fgRef.current.scene()) {
-      const scene = fgRef.current.scene();
-      // Prevent duplicate web injection on re-renders
-      if (!scene.getObjectByName('spiderWebGrid')) {
-        const webMesh = createSpiderWebObject();
-        webMesh.name = 'spiderWebGrid';
-        scene.add(webMesh);
-      }
-    }
-  };
-
+  // Inject the 3D Spider-Web Polar Grid directly into the Three.js scene
   useEffect(() => {
-    if (fgRef.current && !loading) {
-      fgRef.current.cameraPosition({ x: 0, y: 0, z: 280 }, { x: 0, y: 0, z: 0 }, 1000);
+    if (!loading && fgRef.current) {
+      const fg = fgRef.current;
+      const scene = fg.scene();
+
+      if (!scene.getObjectByName('spiderWebGrid')) {
+        const group = new THREE.Group();
+        group.name = 'spiderWebGrid';
+
+        // Create a high-tech 3D Polar Grid (Spider Web)
+        // Parameters: radius, sectors, rings, divisions, color1, color2
+        const polarGrid = new THREE.PolarGridHelper(160, 12, 6, 32, 0x6366f1, 0x818cf8);
+        
+        // Position it right behind the nodes matrix with subtle tilt for 3D depth
+        polarGrid.position.set(0, -20, -10);
+        polarGrid.rotation.x = Math.PI / 2.2;
+
+        // Enhance material transparency and glowing aesthetics
+        polarGrid.traverse((child) => {
+          if (child.material) {
+            child.material.transparent = true;
+            child.material.opacity = 0.35;
+            child.material.depthWrite = false;
+          }
+        });
+
+        group.add(polarGrid);
+        scene.add(group);
+      }
+
+      // Set optimal starting camera angle
+      fg.cameraPosition({ x: 0, y: 0, z: 280 }, { x: 0, y: 0, z: 0 }, 1000);
     }
   }, [loading]);
 
@@ -95,7 +72,7 @@ export default function GraphView({ graphData, onNodeClick }) {
         <div className="flex flex-col items-center justify-center h-full bg-slate-950/70 backdrop-blur-md">
           <div className="w-10 h-10 rounded-full border-2 border-indigo-500/20 border-t-indigo-500 animate-spin mb-3"></div>
           <div className="text-xs font-medium text-slate-400 tracking-wider uppercase animate-pulse font-mono">
-            Rendering Spider-Web Spatial Grid...
+            Rendering 3D Spider-Web Grid...
           </div>
         </div>
       ) : (
@@ -108,15 +85,14 @@ export default function GraphView({ graphData, onNodeClick }) {
             nodeOpacity={0.95}
             nodeResolution={32}
             linkWidth={1.5}
-            linkColor={() => 'rgba(99, 102, 241, 0.25)'}
-            linkOpacity={0.6}
-            onEngineStop={handleEngineStop}
+            linkColor={() => 'rgba(99, 102, 241, 0.3)'}
+            linkOpacity={0.7}
             onNodeClick={onNodeClick}
             backgroundColor="#020617"
             showNavInfo={false}
           />
 
-          {/* Camera Controls */}
+          {/* Camera Controls Toolbar */}
           <div className="absolute bottom-6 right-6 flex flex-col gap-1.5 bg-slate-950/80 backdrop-blur-xl p-1.5 rounded-xl border border-white/10 shadow-2xl z-10">
             <button 
               onClick={handleZoomIn} 
