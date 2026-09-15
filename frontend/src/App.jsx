@@ -27,21 +27,14 @@ export default function App() {
 
   const handleTriggerChange = (triggerId) => {
     setActiveTrigger(triggerId);
-
     if (triggerId === 'contagion') {
-      setAlerts(prev => [
-        `[Contagion Event]: Cluster guarantor G-1 default triggered secondary ripple across connected borrowers.`,
-        ...prev
-      ]);
+      setAlerts(prev => [`[Contagion Event]: Cluster guarantor G-1 default triggered secondary ripple.`, ...prev]);
       setGraphData(prev => ({
         ...prev,
         nodes: prev.nodes.map(n => n.id === 'G-1' ? { ...n, color: '#ef4444', riskScore: 88, status: 'Quarantined' } : n)
       }));
     } else if (triggerId === 'outage') {
-      setAlerts(prev => [
-        `[Gateway Outage]: UPI Rail integration latency spiked for Gateway PW-1; liquidity restricted.`,
-        ...prev
-      ]);
+      setAlerts(prev => [`[Gateway Outage]: UPI Rail integration latency spiked for Gateway PW-1.`, ...prev]);
       setGraphData(prev => ({
         ...prev,
         nodes: prev.nodes.map(n => n.id === 'PW-1' ? { ...n, color: '#f59e0b', riskScore: 75, status: 'Hardship' } : n)
@@ -58,7 +51,7 @@ export default function App() {
   return (
     <div className="relative flex flex-col h-screen w-screen bg-[#020617] text-slate-100 overflow-hidden font-sans select-none">
       
-      {/* Ambient Enterprise Background Glow */}
+      {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/[0.07] rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/[0.05] rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -71,7 +64,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-3">
             <h1 className="text-sm font-semibold tracking-tight text-slate-100 font-mono">
-              CONTAGION SHIELD <span className="text-slate-500 font-normal">v3.0 (3D Spatial)</span>
+              CONTAGION SHIELD <span className="text-slate-500 font-normal">v3.0</span>
             </h1>
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400 border border-white/10 tracking-wide uppercase">
               Microfinance Risk Platform
@@ -79,15 +72,13 @@ export default function App() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-indigo-400 text-xs font-semibold rounded-xl transition-all border border-indigo-500/30 flex items-center gap-2 shadow-lg"
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-indigo-400 text-xs font-semibold rounded-xl transition-all border border-indigo-500/30 shadow-lg"
           >
             <span>📊 Run Monte Carlo</span>
           </button>
-
           <button 
             onClick={handleExportReport}
             className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/20 border border-indigo-400/20 flex items-center gap-2"
@@ -104,23 +95,23 @@ export default function App() {
         {/* Left / Center Graph & Metrics Area */}
         <div className="flex-1 flex flex-col gap-4 overflow-hidden">
           
-          {/* Elite Metrics Grid */}
+          {/* Elite Uniform Metric Cards (Fixed Font Sizes & Padding) */}
           <div className="grid grid-cols-4 gap-4 shrink-0">
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Total Borrowers</span>
-              <span className="text-lg font-bold font-mono tracking-tight text-slate-100 mt-1">1,248</span>
+              <span className="text-2xl font-bold font-mono tracking-tight text-slate-100 mt-1">1,248</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Active Clusters</span>
-              <span className="text-lg font-bold font-mono tracking-tight text-indigo-400 mt-1">42</span>
+              <span className="text-2xl font-bold font-mono tracking-tight text-indigo-400 mt-1">42</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">System Risk Score</span>
-              <span className="text-lg font-bold font-mono tracking-tight text-emerald-400 mt-1">14.2%</span>
+              <span className="text-2xl font-bold font-mono tracking-tight text-emerald-400 mt-1">14.2%</span>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-3.5 rounded-2xl flex flex-col justify-between shadow-lg">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] p-4 rounded-2xl flex flex-col justify-between shadow-lg">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Node Health Split</span>
-              <div className="flex items-center gap-1 text-xs font-mono font-bold mt-1">
+              <div className="flex items-center gap-1.5 text-sm font-mono font-bold mt-1">
                 <span className="text-emerald-400" title="Healthy">88%</span>
                 <span className="text-slate-600">/</span>
                 <span className="text-amber-400" title="Hardship">9%</span>
@@ -135,10 +126,10 @@ export default function App() {
             <ScenarioControls activeTrigger={activeTrigger} onTriggerChange={handleTriggerChange} />
           </div>
 
-          {/* 3D Canvas Container */}
+          {/* Graph Canvas Container */}
           <div className="flex-1 bg-slate-900/20 border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl relative backdrop-blur-xl">
             <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-slate-950/80 backdrop-blur-md border border-white/10 rounded-full text-[10px] uppercase font-mono tracking-wider text-slate-400 pointer-events-none">
-              3D Spatial Topology // Three.js Viewport
+              3D Spatial Topology // Spider-Web Grid View
             </div>
             <GraphView graphData={graphData} onNodeClick={(node) => setSelectedNode(node)} />
           </div>
@@ -149,19 +140,18 @@ export default function App() {
           <div className="bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl">
             <AlertFeed alerts={alerts} />
           </div>
-          <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl min-h-[380px]">
             <SidePanel selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
           </div>
         </div>
 
       </div>
 
-      {/* Monte Carlo Simulation Modal */}
       <MonteCarloModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onRunSimulation={(intensity) => {
-          setAlerts(prev => [`[Monte Carlo Engine]: Ran simulation at ${intensity}% shock intensity across 1,000 stochastic paths.`, ...prev]);
+          setAlerts(prev => [`[Monte Carlo Engine]: Ran simulation at ${intensity}% shock intensity across 1,000 paths.`, ...prev]);
         }}
       />
     </div>
