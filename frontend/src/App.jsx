@@ -1,91 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import GraphView from './components/GraphView';
+import ScenarioControls from './components/ScenarioControls';
 import SidePanel from './components/SidePanel';
 import AlertFeed from './components/AlertFeed';
-import ScenarioControls from './components/ScenarioControls';
 
 export default function App() {
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
-  const [selectedBorrower, setSelectedBorrower] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-  const [activeShockLabel, setActiveShockLabel] = useState('None');
+  const [activeTrigger, setActiveTrigger] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      const resGraph = await fetch('http://localhost:8000/graph');
-      const dataGraph = await resGraph.json();
-      setGraphData(dataGraph);
-
-      const resAlerts = await fetch('http://localhost:8000/alerts');
-      const dataAlerts = await resAlerts.json();
-      setAlerts(dataAlerts.alerts);
-    } catch (err) {
-      console.error('Failed to sync graph backend data:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleTriggerScenario = async (scenarioKey) => {
-    try {
-      const res = await fetch(`http://localhost:8000/simulate/${scenarioKey}`, { method: 'POST' });
-      const data = await res.json();
-      setActiveShockLabel(data.active_shock || scenarioKey);
-      await fetchData();
-    } catch (err) {
-      console.error('Simulation trigger failed:', err);
-    }
-  };
-
-  const handleSelectNode = async (nodeId) => {
-    if (nodeId.startsWith('B_')) {
-      try {
-        const res = await fetch(`http://localhost:8000/borrower/${nodeId}`);
-        const data = await res.json();
-        setSelectedBorrower(data);
-      } catch (err) {
-        console.error('Failed to fetch borrower inspection details:', err);
-      }
-    } else {
-      setSelectedBorrower(null);
-    }
+  // Sample mock graph data
+  const mockGraphData = {
+    nodes: [
+      { id: 'B-101', type: 'Borrower', color: '#6366f1', val: 8 },
+      { id: 'B-102', type: 'Borrower', color: '#6366f1', val: 6 },
+      { id: 'G-1', type: 'Guarantor', color: '#f59e0b', val: 10 },
+      { id: 'PW-1', type: 'Gateway', color: '#10b981', val: 12 }
+    ],
+    links: [
+      { source: 'B-101', target: 'G-1' },
+      { source: 'B-102', target: 'G-1' },
+      { source: 'G-1', target: 'PW-1' }
+    ]
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 flex flex-col gap-6 max-w-7xl mx-auto">
-      {/* Top App Bar */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-xl gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-black text-white tracking-tight">CONTAGION SHIELD</h1>
-            <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-full font-semibold">
-              Heterogeneous Graph Neural Engine (Mock-Sim)
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 mt-1">
-            Microfinance Joint-Liability Credit Risk Platform • Real-Time Contagion Isolation & Macro Shock Separation
-          </p>
-        </div>
-        <div className="bg-slate-950 border border-slate-800 px-4 py-2 rounded-lg text-xs">
-          <span className="text-slate-500">Active Market State: </span>
-          <span className="font-bold text-amber-400">{activeShockLabel}</span>
+    <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+      
+      {/* Header */}
+      <header className="h-14 border-b border-slate-800 bg-slate-900/40 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></div>
+          <h1 className="text-base font-bold tracking-wide">Contagion Shield</h1>
+          <span className="text-xs px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Microfinance Risk Platform</span>
         </div>
       </header>
 
-      {/* Scenario Triggers */}
-      <ScenarioControls onTrigger={handleTriggerScenario} />
+      {/* Main Workspace */}
+      <div className="flex flex-1 overflow-hidden p-4 gap-4">
+        
+        {/* Left / Center Graph Area */}
+        <div className="flex-1 flex flex-col gap-4 overflow-hidden">
+          
+          {/* Quick-Stats Bar */}
+          <div className="grid grid-cols-3 gap-4 shrink-0">
+            <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 p-3 rounded-xl flex items-center justify-between shadow-lg">
+              <span className="text-xs text-slate-400 font-medium">Total Borrowers</span>
+              <span className="text-sm font-bold text-slate-200">1,248</span>
+            </div>
+            <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 p-3 rounded-xl flex items-center justify-between shadow-lg">
+              <span className="text-xs text-slate-400 font-medium">Active Clusters</span>
+              <span className="text-sm font-bold text-indigo-400">42</span>
+            </div>
+            <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 p-3 rounded-xl flex items-center justify-between shadow-lg">
+              <span className="text-xs text-slate-400 font-medium">System Risk Score</span>
+              <span className="text-sm font-bold text-emerald-400">Low (14.2%)</span>
+            </div>
+          </div>
 
-      {/* Main Grid View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          <GraphView graphData={graphData} onSelectNode={handleSelectNode} />
-          <AlertFeed alerts={alerts} />
+          {/* Scenario Triggers Toolbar */}
+          <div className="shrink-0">
+            <ScenarioControls activeTrigger={activeTrigger} setActiveTrigger={setActiveTrigger} />
+          </div>
+
+          {/* Graph Canvas Container */}
+          <div className="flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
+            <GraphView graphData={mockGraphData} onNodeClick={(node) => setSelectedNode(node)} />
+          </div>
         </div>
-        <div className="lg:col-span-1">
-          <SidePanel borrowerData={selectedBorrower} onClose={() => setSelectedBorrower(null)} />
+
+        {/* Right Sidebar & Alert Feed */}
+        <div className="w-80 flex flex-col gap-4 shrink-0 overflow-y-auto">
+          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+            <AlertFeed />
+          </div>
+          <div className="flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+            <SidePanel selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
+          </div>
         </div>
+
       </div>
     </div>
   );

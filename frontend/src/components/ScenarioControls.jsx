@@ -1,30 +1,35 @@
 import React from 'react';
 
-export default function ScenarioControls({ onTrigger }) {
-  const scenarios = [
-    { key: 'isolated_hardship', label: 'Isolated Hardship', color: 'bg-amber-600 hover:bg-amber-500' },
-    { key: 'peer_contagion', label: 'Peer Contagion Event', color: 'bg-rose-600 hover:bg-rose-500' },
-    { key: 'gateway_outage', label: 'Payment Gateway Outage', color: 'bg-purple-600 hover:bg-purple-500' },
-    { key: 'macro_shock', label: 'Macro Shock (Rumor)', color: 'bg-blue-600 hover:bg-blue-500' },
-    { key: 'collusion_ring', label: 'Collusion Ring / Sybil', color: 'bg-orange-600 hover:bg-orange-500' },
+export default function ScenarioControls({ activeTrigger, setActiveTrigger }) {
+  const triggers = [
+    { id: 'hardship', label: 'Isolated Hardship' },
+    { id: 'contagion', label: 'Peer Contagion' },
+    { id: 'outage', label: 'Gateway Outage' },
+    { id: 'macro', label: 'Macro Shock' }
   ];
 
   return (
-    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg mb-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3">
-        Live Stress & Scenario Injector Engine
-      </h2>
-      <div className="flex flex-wrap gap-3">
-        {scenarios.map((s) => (
+    <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800 p-3 rounded-2xl flex flex-wrap items-center gap-3 shadow-lg">
+      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-2">
+        Stress Triggers:
+      </span>
+      
+      {triggers.map((trigger) => {
+        const isActive = activeTrigger === trigger.id;
+        return (
           <button
-            key={s.key}
-            onClick={() => onTrigger(s.key)}
-            className={`px-4 py-2 rounded-lg text-xs font-medium text-white transition-all shadow-md ${s.color}`}
+            key={trigger.id}
+            onClick={() => setActiveTrigger(trigger.id)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 border ${
+              isActive 
+                ? "bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/25 scale-105" 
+                : "bg-slate-800/50 text-slate-400 border-white/10 hover:bg-slate-800 hover:text-slate-200"
+            }`}
           >
-            Trigger: {s.label}
+            {trigger.label}
           </button>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 }
