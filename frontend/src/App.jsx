@@ -3,11 +3,13 @@ import GraphView from './components/GraphView';
 import ScenarioControls from './components/ScenarioControls';
 import SidePanel from './components/SidePanel';
 import AlertFeed from './components/AlertFeed';
+import MonteCarloModal from './components/MonteCarloModal';
 
 export default function App() {
   const [activeTrigger, setActiveTrigger] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [graphData, setGraphData] = useState({
     nodes: [
@@ -69,7 +71,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-3">
             <h1 className="text-sm font-semibold tracking-tight text-slate-100 font-mono">
-              CONTAGION SHIELD <span className="text-slate-500 font-normal">v2.4</span>
+              CONTAGION SHIELD <span className="text-slate-500 font-normal">v3.0 (3D Spatial)</span>
             </h1>
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400 border border-white/10 tracking-wide uppercase">
               Microfinance Risk Platform
@@ -77,14 +79,23 @@ export default function App() {
           </div>
         </div>
 
-        {/* Clean Vector Export Button */}
-        <button 
-          onClick={handleExportReport}
-          className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all duration-150 shadow-lg shadow-indigo-600/20 border border-indigo-400/20 flex items-center gap-2 active:scale-95"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <span>Export Audit Report</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-indigo-400 text-xs font-semibold rounded-xl transition-all border border-indigo-500/30 flex items-center gap-2 shadow-lg"
+          >
+            <span>📊 Run Monte Carlo</span>
+          </button>
+
+          <button 
+            onClick={handleExportReport}
+            className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/20 border border-indigo-400/20 flex items-center gap-2"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Export Audit Report</span>
+          </button>
+        </div>
       </header>
 
       {/* Main Workspace */}
@@ -124,10 +135,10 @@ export default function App() {
             <ScenarioControls activeTrigger={activeTrigger} onTriggerChange={handleTriggerChange} />
           </div>
 
-          {/* Graph Canvas Container */}
+          {/* 3D Canvas Container */}
           <div className="flex-1 bg-slate-900/20 border border-white/[0.06] rounded-3xl overflow-hidden shadow-2xl relative backdrop-blur-xl">
             <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-slate-950/80 backdrop-blur-md border border-white/10 rounded-full text-[10px] uppercase font-mono tracking-wider text-slate-400 pointer-events-none">
-              Topology Canvas // Real-Time Graph
+              3D Spatial Topology // Three.js Viewport
             </div>
             <GraphView graphData={graphData} onNodeClick={(node) => setSelectedNode(node)} />
           </div>
@@ -144,6 +155,15 @@ export default function App() {
         </div>
 
       </div>
+
+      {/* Monte Carlo Simulation Modal */}
+      <MonteCarloModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onRunSimulation={(intensity) => {
+          setAlerts(prev => [`[Monte Carlo Engine]: Ran simulation at ${intensity}% shock intensity across 1,000 stochastic paths.`, ...prev]);
+        }}
+      />
     </div>
   );
 }
