@@ -4,13 +4,28 @@ import GraphView from './components/GraphView';
 export default function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [activeTrigger, setActiveTrigger] = useState('Peer Contagion');
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [systemRisk, setSystemRisk] = useState('14.2%');
+  const [warningFeed, setWarningFeed] = useState([]);
 
   const triggers = ['Isolated Hardship', 'Peer Contagion', 'Gateway Outage', 'Macro Shock'];
+
+  const runMonteCarloSimulation = () => {
+    setIsSimulating(true);
+    setTimeout(() => {
+      setSystemRisk('28.6%');
+      setWarningFeed([
+        { id: 1, text: 'Monte Carlo run #4092 detected cascading node failure in Cluster 4.' },
+        { id: 2, text: 'Warning: Gateway outage probability increased by 14% under stress.' }
+      ]);
+      setIsSimulating(false);
+    }, 1200);
+  };
 
   return (
     <div className="w-screen min-h-screen bg-[#060911] text-slate-100 flex flex-col font-sans">
       
-      {/* Top Navigation Bar - Static header so it doesn't overlap */}
+      {/* Top Navigation Bar */}
       <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -18,12 +33,25 @@ export default function App() {
           <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">MICROFINANCE RISK PLATFORM</span>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-xs font-semibold rounded text-white transition shadow-lg shadow-blue-900/40">Run Monte Carlo</button>
+          <button 
+            onClick={runMonteCarloSimulation}
+            disabled={isSimulating}
+            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-xs font-semibold rounded text-white transition shadow-lg shadow-blue-950/40 flex items-center space-x-2"
+          >
+            {isSimulating ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                <span>Simulating...</span>
+              </>
+            ) : (
+              <span>Run Monte Carlo</span>
+            )}
+          </button>
           <button className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded text-slate-200 border border-slate-700 transition">Export Audit Report</button>
         </div>
       </header>
 
-      {/* Main Dashboard Layout with proper spacing */}
+      {/* Main Dashboard Layout */}
       <div className="flex-1 grid grid-cols-12 gap-4 p-4">
         
         {/* Left Column (Canvas & Metrics Grid) */}
@@ -41,7 +69,7 @@ export default function App() {
             </div>
             <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
               <span className="text-[10px] tracking-wider text-slate-400 uppercase">System Risk Score</span>
-              <span className="text-2xl font-bold text-amber-400 mt-1">14.2%</span>
+              <span className="text-2xl font-bold text-amber-400 mt-1">{systemRisk}</span>
             </div>
             <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
               <span className="text-[10px] tracking-wider text-slate-400 uppercase">Node Health Split</span>
@@ -88,14 +116,24 @@ export default function App() {
         <div className="col-span-3 flex flex-col gap-4">
           
           {/* Warning Feed Box */}
-          <div className="h-36 shrink-0 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col">
+          <div className="h-36 shrink-0 bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] tracking-wider text-slate-400 uppercase font-semibold">Early Warning Feed</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className={`w-2 h-2 rounded-full ${isSimulating ? 'bg-amber-400 animate-ping' : 'bg-emerald-500 animate-pulse'}`}></span>
             </div>
-            <div className="flex-1 flex items-center justify-center text-center">
-              <p className="text-xs text-slate-500 italic">No cascading contagion risks detected in current epoch.</p>
-            </div>
+            {warningFeed.length > 0 ? (
+              <div className="space-y-1.5 mt-1 text-[11px] font-mono text-amber-300">
+                {warningFeed.map((w) => (
+                  <div key={w.id} className="p-1.5 bg-amber-950/20 border border-amber-800/40 rounded">
+                    {w.text}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-center">
+                <p className="text-xs text-slate-500 italic">No cascading contagion risks detected in current epoch.</p>
+              </div>
+            )}
           </div>
 
           {/* Node Inspector Panel */}
