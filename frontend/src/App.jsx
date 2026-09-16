@@ -8,10 +8,10 @@ export default function App() {
   const triggers = ['Isolated Hardship', 'Peer Contagion', 'Gateway Outage', 'Macro Shock'];
 
   return (
-    <div className="w-screen min-h-screen bg-[#060911] text-slate-100 flex flex-col overflow-y-auto font-sans">
+    <div className="w-screen min-h-screen bg-[#060911] text-slate-100 flex flex-col font-sans">
       
-      {/* Top Navigation Bar */}
-      <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0 sticky top-0 z-50">
+      {/* Top Navigation Bar - Static header so it doesn't overlap */}
+      <header className="h-14 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
           <h1 className="font-bold tracking-wider text-sm text-slate-200">CONTAGION SHIELD <span className="text-xs text-blue-400 font-mono ml-1">v3.0</span></h1>
@@ -23,13 +23,13 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Dashboard Layout */}
+      {/* Main Dashboard Layout with proper spacing */}
       <div className="flex-1 grid grid-cols-12 gap-4 p-4">
         
         {/* Left Column (Canvas & Metrics Grid) */}
         <div className="col-span-9 flex flex-col gap-4">
           
-          {/* Elite Metrics Grid - Uniform typography and spacing */}
+          {/* Elite Metrics Grid */}
           <div className="grid grid-cols-4 gap-4 shrink-0">
             <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl p-4 flex flex-col justify-center">
               <span className="text-[10px] tracking-wider text-slate-400 uppercase">Total Borrowers</span>
@@ -49,7 +49,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Stress Triggers with Active Neon States */}
+          {/* Stress Triggers */}
           <div className="bg-[#0b101d] border border-slate-800/80 rounded-xl px-4 py-3 flex items-center space-x-4 shrink-0">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Stress Triggers:</span>
             <div className="flex items-center space-x-2">
@@ -84,7 +84,7 @@ export default function App() {
 
         </div>
 
-        {/* Right Column (Alert Feed & Expanded Node Inspector) */}
+        {/* Right Column (Alert Feed & Node Inspector) */}
         <div className="col-span-3 flex flex-col gap-4">
           
           {/* Warning Feed Box */}
